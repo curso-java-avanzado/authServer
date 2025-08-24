@@ -1,4 +1,4 @@
-package main.java.com.pragma.crediya.model.user.VO;
+package com.pragma.crediya.model.user.VO;
 
 public record SalarioBase(Double value) {
     public SalarioBase {

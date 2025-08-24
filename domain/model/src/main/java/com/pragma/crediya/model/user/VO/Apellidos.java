@@ -1,4 +1,4 @@
-package main.java.com.pragma.crediya.model.user.VO;
+package com.pragma.crediya.model.user.VO;
 
 public record Apellidos(String value) {
     public Apellidos {
