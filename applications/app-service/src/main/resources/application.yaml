@@ -19,6 +19,9 @@ spring:
       schema-locations: classpath:schema.sql
   profiles:
     include: null
+jwt:
+  secret: dGVzdC1zZWNyZXQta2V5LWZvci1jcmVkaVlhLWFwcGxpY2F0aW9u
+  expiration: 86400000
 management:
   endpoints:
     web:

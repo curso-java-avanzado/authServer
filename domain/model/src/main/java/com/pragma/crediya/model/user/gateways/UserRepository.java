@@ -13,11 +13,13 @@ public interface UserRepository {
     // Define your repository methods here, for reactive repo
     Mono<User> save(User user);
 
-    Mono<User> findById(Long id);
+    Mono<User> findById(String id);
 
     Flux<User> findAll();
 
+    Mono<User> findByEmail(String email);
+
     Mono<Void> update(User user);
 
-    Mono<Void> delete(Long id);
+    Mono<Void> delete(String id);
 }

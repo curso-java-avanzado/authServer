@@ -16,7 +16,7 @@ public class UserUseCase {
         return userRepository.save(user);
     }
 
-    public Mono<User> findById(Long id) {
+    public Mono<User> findById(String id) {
         return userRepository.findById(id);
     }
 
@@ -24,11 +24,15 @@ public class UserUseCase {
         return userRepository.findAll();
     }
 
+    public Mono<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     // public Mono<User> update(User user) {
     //     return userRepository.update(user);
     // }
 
-    public Mono<Void> delete(Long id) {
+    public Mono<Void> delete(String id) {
         return userRepository.delete(id);
     }
 

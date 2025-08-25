@@ -5,7 +5,9 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 import com.pragma.crediya.r2dbc.entities.UserEntity;
 
-// TODO: This file is just an example, you should delete or modify it
-public interface MyReactiveRepository extends ReactiveCrudRepository<UserEntity, Long>, ReactiveQueryByExampleExecutor<UserEntity> {
+import reactor.core.publisher.Mono;
 
+public interface MyReactiveRepository extends ReactiveCrudRepository<UserEntity, String>, ReactiveQueryByExampleExecutor<UserEntity> {
+
+    Mono<UserEntity> findByEmail(String email);
 }

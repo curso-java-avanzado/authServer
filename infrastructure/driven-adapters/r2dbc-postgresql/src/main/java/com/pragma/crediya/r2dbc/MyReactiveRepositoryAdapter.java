@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User,
     UserEntity,
-    Long,
+    String,
     MyReactiveRepository
 > implements UserRepository {
     public MyReactiveRepositoryAdapter(MyReactiveRepository repository, ObjectMapper mapper) {
@@ -27,15 +27,20 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    public Mono<User> findByEmail(String email) {
+        return repository.findByEmail(email)
+                .map(this::toEntity);
+    }
+
+    @Override
     public Mono<Void> update(User user) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public Mono<Void> delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public Mono<Void> delete(String id) {
+        return repository.deleteById(id);
     }
 
 }

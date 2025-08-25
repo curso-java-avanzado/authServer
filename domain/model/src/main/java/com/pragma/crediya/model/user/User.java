@@ -29,13 +29,16 @@ public class User {
     // private Date fecha_nacimiento;
     // private String direccion;
 
+    private String id_usuario;
     private String nombre;
     private String apellido;
     private String email;
+    private String password;
     private String documento_identidad;
     private LocalDate fecha_nacimiento;
     private String direccion;
     private String telefono;
     private Double salario_base;
+    private String id_rol;
 
 }

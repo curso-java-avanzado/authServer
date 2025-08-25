@@ -3,6 +3,7 @@ package com.pragma.crediya.r2dbc.entities;
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.AllArgsConstructor;
@@ -16,14 +17,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserEntity {
-    @Id Long id_usuario;
-    String nombre;
-    String apellido;
-    String email;
-    String documento_identidad;
-    LocalDate fecha_nacimiento;
-    String direccion;
-    String telefono;
-    Double salario_base;
-    String id_rol;
+    @Id @Column("id_usuario") String id_usuario;
+    @Column("nombre") String nombre;
+    @Column("apellido") String apellido;
+    @Column("email") String email;
+    @Column("password") String password;
+    @Column("documento_identidad") String documento_identidad;
+    @Column("fecha_nacimiento") LocalDate fecha_nacimiento;
+    @Column("direccion") String direccion;
+    @Column("telefono") String telefono;
+    @Column("salario_base") Double salario_base;
+    @Column("id_rol") String id_rol;
 }
