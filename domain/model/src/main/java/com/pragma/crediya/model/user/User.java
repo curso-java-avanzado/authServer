@@ -1,12 +1,12 @@
 package com.pragma.crediya.model.user;
 import lombok.Builder;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-import com.pragma.crediya.model.user.VO.Apellidos;
-import com.pragma.crediya.model.user.VO.Email;
-import com.pragma.crediya.model.user.VO.Nombres;
-import com.pragma.crediya.model.user.VO.SalarioBase;
+// import com.pragma.crediya.model.user.VO.Apellidos;
+// import com.pragma.crediya.model.user.VO.Email;
+// import com.pragma.crediya.model.user.VO.Nombres;
+// import com.pragma.crediya.model.user.VO.SalarioBase;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +20,22 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 public class User {
 
-    private Nombres nombre;
-    private Apellidos apellido;
-    private Email email;
+    // private Nombres nombre;
+    // private Apellidos apellido;
+    // private Email email;
+    // private String documento_identidad;
+    // private String telefono;
+    // private SalarioBase salario_base;
+    // private Date fecha_nacimiento;
+    // private String direccion;
+
+    private String nombre;
+    private String apellido;
+    private String email;
     private String documento_identidad;
-    private String telefono;
-    private SalarioBase salario_base;
-    private Date fecha_nacimiento;
+    private LocalDate fecha_nacimiento;
     private String direccion;
+    private String telefono;
+    private Double salario_base;
+
 }
