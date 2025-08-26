@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+// TODO: Esto iría más bien en la clase que revisa las autorizaciones
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -26,11 +27,7 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getPath().value();
-        
-        // Skip authentication for public endpoints
-        if (isPublicPath(path)) {
-            return chain.filter(exchange);
-        }
+    
 
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         
@@ -60,17 +57,5 @@ public class JwtAuthenticationFilter implements WebFilter {
         }
 
         return chain.filter(exchange);
-    }
-
-    private boolean isPublicPath(String path) {
-        return path.startsWith("/auth/") || 
-               path.startsWith("/actuator/") ||
-               path.startsWith("/webjars/") ||
-               path.startsWith("/v3/api-docs/") ||
-               path.startsWith("/swagger-ui/") ||
-               path.equals("/swagger-ui.html") ||
-               path.equals("/favicon.ico") ||
-               path.equals("/api/get") ||
-               path.equals("/api/usecase/path");
     }
 }
