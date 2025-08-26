@@ -1,4 +1,4 @@
-package com.pragma.crediya.api.security;
+package com.pragma.crediya.api.services;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -6,8 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pragma.crediya.api.DTOs.AuthRequestDTO;
 import com.pragma.crediya.api.DTOs.AuthResponseDTO;
-import com.pragma.crediya.api.DTOs.RegisterRequestDTO;
+import com.pragma.crediya.api.DTOs.UserDTO;
 import com.pragma.crediya.api.mapper.UserMapper;
+import com.pragma.crediya.api.security.JwtService;
 import com.pragma.crediya.model.user.User;
 import com.pragma.crediya.usecase.user.UserUseCase;
 
@@ -24,7 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Mono<AuthResponseDTO> register(RegisterRequestDTO request) {
+    public Mono<AuthResponseDTO> register(UserDTO request) {
         User user = User.builder()
                 // NO asignar ID - dejar que la DB lo genere
                 .nombre(request.nombre())

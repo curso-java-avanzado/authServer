@@ -44,6 +44,15 @@ public class GlobalExceptionHandler {
         return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleIllegalArgumentException(
+            IllegalArgumentException ex) {
+
+        log.warn("IllegalArgumentException: {}", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("Error de validación", Map.of("error", ex.getMessage()));
+        return Mono.just(ResponseEntity.badRequest().body(errorResponse));
+    }
+
     @Getter
     @Setter
     public static class ErrorResponse {

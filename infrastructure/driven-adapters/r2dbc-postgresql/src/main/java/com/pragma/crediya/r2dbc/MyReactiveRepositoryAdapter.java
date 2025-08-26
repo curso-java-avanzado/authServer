@@ -32,15 +32,4 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .map(this::toEntity);
     }
 
-    @Override
-    public Mono<Void> update(User user) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
-
-    @Override
-    public Mono<Void> delete(String id) {
-        return repository.deleteById(id);
-    }
-
 }

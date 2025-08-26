@@ -15,19 +15,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 public class User {
-
-    // private Nombres nombre;
-    // private Apellidos apellido;
-    // private Email email;
-    // private String documento_identidad;
-    // private String telefono;
-    // private SalarioBase salario_base;
-    // private Date fecha_nacimiento;
-    // private String direccion;
 
     private String id_usuario;
     private String nombre;

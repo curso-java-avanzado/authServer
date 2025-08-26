@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/auth/**").permitAll()
-                        .pathMatchers("/api/get", "/api/usecase/path").permitAll()
+                        .pathMatchers("/api/**").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/webjars/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()

@@ -13,3 +13,9 @@ CREATE TABLE IF NOT EXISTS usuario (
     salario_base DECIMAL(15,2),
     id_rol VARCHAR(255) DEFAULT 'USER'
 );
+
+CREATE TABLE IF NOT EXISTS rol (
+    id_rol VARCHAR(50) PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    descripcion VARCHAR(255) NOT NULL
+);

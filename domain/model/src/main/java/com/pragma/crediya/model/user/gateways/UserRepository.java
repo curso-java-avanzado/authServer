@@ -1,8 +1,5 @@
 package com.pragma.crediya.model.user.gateways;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.pragma.crediya.model.user.User;
 
 import reactor.core.publisher.Flux;
@@ -13,13 +10,5 @@ public interface UserRepository {
     // Define your repository methods here, for reactive repo
     Mono<User> save(User user);
 
-    Mono<User> findById(String id);
-
-    Flux<User> findAll();
-
     Mono<User> findByEmail(String email);
-
-    Mono<Void> update(User user);
-
-    Mono<Void> delete(String id);
 }

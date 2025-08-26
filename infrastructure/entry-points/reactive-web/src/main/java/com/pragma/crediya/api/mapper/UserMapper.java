@@ -7,8 +7,6 @@ import org.mapstruct.Mapper;
 import com.pragma.crediya.api.DTOs.UserDTO;
 import com.pragma.crediya.model.user.User;
 
-import org.mapstruct.Mapping;
-
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     
