@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @RestController
 @RequestMapping(value = "/api/v1")
 @AllArgsConstructor
@@ -28,16 +30,13 @@ public class ApiRest {
     private final AuthService authService;
 
     @PostMapping("/usuarios")
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public Mono<ResponseEntity<AuthResponseDTO>> postMethodName(@Valid @RequestBody UserDTO userDTO) {
         log.info("Creating user: {}", userDTO.email());
 
         return authService.register(userDTO)
-                .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response))
-                .onErrorResume(error -> {
-                    log.error("Error registering user: {}", error.getMessage());
-                    return Mono.just(ResponseEntity.badRequest().build());
-                });
+                .map(response -> ResponseEntity.status(HttpStatus.CREATED).body(response));
     }
 
     @PostMapping("/login")
@@ -47,8 +46,8 @@ public class ApiRest {
                 .map(ResponseEntity::ok)
                 .onErrorResume(error -> {
                     log.error("Login failed for user {}: {}", request.email(), error.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+                    throw new IllegalArgumentException("Credenciales inválidas");
                 });
-    }
+    }   
 
 }

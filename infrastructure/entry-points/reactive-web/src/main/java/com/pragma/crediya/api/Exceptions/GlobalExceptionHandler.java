@@ -1,4 +1,4 @@
-package com.pragma.crediya.api.Exceptions;
+package com.pragma.crediya.api.exceptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +50,15 @@ public class GlobalExceptionHandler {
 
         log.warn("IllegalArgumentException: {}", ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse("Error de validación", Map.of("error", ex.getMessage()));
+        return Mono.just(ResponseEntity.badRequest().body(errorResponse));
+    }
+
+    @ExceptionHandler(UserCreatedException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleUserCreatedException(
+            UserCreatedException ex) {
+
+        log.warn("UserCreatedException: {}", ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse("Error de creación de usuario", Map.of("error", ex.getMessage()));
         return Mono.just(ResponseEntity.badRequest().body(errorResponse));
     }
 

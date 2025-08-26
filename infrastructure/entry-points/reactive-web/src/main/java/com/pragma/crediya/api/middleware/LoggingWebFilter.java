@@ -1,5 +1,6 @@
 package com.pragma.crediya.api.middleware;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class LoggingWebFilter implements WebFilter {
         log.info("----> [{}] {} - Iniciada a las {}",
                  exchange.getRequest().getMethod(),
                  exchange.getRequest().getURI(),
-                 LocalDateTime.now());
+                 LocalDate.now());
 
         return chain.filter(exchange);
     }

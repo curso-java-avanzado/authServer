@@ -1,76 +1,79 @@
 package com.pragma.crediya.api.security;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.function.Function;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.InvalidKeyException;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Date;
+import java.util.UUID;
 
 @Service
+// Este servicio es para firmar mis JWT
 public class JwtService {
 
-    @Value("${jwt.secret:dGVzdC1zZWNyZXQta2V5LWZvci1jcmVkaVlhLWFwcGxpY2F0aW9u}")
-    private String jwtSecret;
+    private RSAKey rsaKey;
 
-    @Value("${jwt.expiration:86400000}") // 24 horas
-    private Long jwtExpiration;
+    private long jwtExpiration = 86400000L; // 24h
 
+    @PostConstruct
+    public void initKeys() {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-    public String generateToken(String email, String role) {
+            rsaKey = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+                    .privateKey((RSAPrivateKey) keyPair.getPrivate())
+                    .keyID(UUID.randomUUID().toString())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generando claves RSA", e);
+        }
+    }
+
+    public String generateToken(String email, String role) throws InvalidKeyException, JOSEException {
         return Jwts.builder()
                 .subject(email)
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .signWith(rsaKey.toPrivateKey(), Jwts.SIG.RS256) // 🔑 clave privada
                 .compact();
     }
 
-    public String extractRole(String token) {
-        return extractClaim(token, claims -> claims.get("role", String.class));
+    public String extractEmail(String token) throws JwtException, IllegalArgumentException, JOSEException {
+        return extractAllClaims(token).getSubject();
     }
 
-    public String extractEmail(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public String extractRole(String token) throws JwtException, IllegalArgumentException, JOSEException {
+        return extractAllClaims(token).get("role", String.class);
     }
 
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public boolean isTokenExpired(String token) throws JwtException, IllegalArgumentException, JOSEException {
+        return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public Boolean validateToken(String token, String email) {
-        final String tokenEmail = extractEmail(token);
-        return (tokenEmail.equals(email) && !isTokenExpired(token));
-    }
-
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) throws JwtException, IllegalArgumentException, JOSEException {
         return Jwts.parser()
-                .verifyWith(getSigningKey())
+                .verifyWith(rsaKey.toPublicKey()) // 🔑 clave pública
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+    // Expone el JWKS (solo clave pública)
+    public JWKSet getJwkSet() {
+        return new JWKSet(rsaKey.toPublicJWK());
     }
 }
