@@ -25,7 +25,7 @@ public class User {
     private String apellido;
     private String email;
     private String password;
-    private String documento_identidad;
+    private String documentoIdentidad;
     private LocalDate fecha_nacimiento;
     private String direccion;
     private String telefono;

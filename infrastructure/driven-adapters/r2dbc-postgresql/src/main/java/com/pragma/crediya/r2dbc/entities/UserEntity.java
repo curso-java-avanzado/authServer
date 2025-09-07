@@ -22,7 +22,7 @@ public class UserEntity {
     @Column("apellido") String apellido;
     @Column("email") String email;
     @Column("password") String password;
-    @Column("documento_identidad") String documento_identidad;
+    @Column("documento_identidad") String documentoIdentidad;
     @Column("fecha_nacimiento") LocalDate fecha_nacimiento;
     @Column("direccion") String direccion;
     @Column("telefono") String telefono;

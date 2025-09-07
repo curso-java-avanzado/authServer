@@ -32,4 +32,10 @@ public class MyReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .map(this::toEntity);
     }
 
+    @Override
+    public Mono<User> findByDocumentoIdentidad(String documentoIdentidad) {
+        return repository.findByDocumentoIdentidad(documentoIdentidad)
+                .map(this::toEntity);
+    }
+
 }
