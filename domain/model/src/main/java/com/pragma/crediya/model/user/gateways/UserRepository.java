@@ -11,4 +11,6 @@ public interface UserRepository {
     Mono<User> save(User user);
 
     Mono<User> findByEmail(String email);
+
+    Mono<User> findByDocumentoIdentidad(String documentoIdentidad);
 }

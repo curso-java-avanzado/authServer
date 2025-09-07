@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 import com.pragma.crediya.api.DTOs.UserDTO;
+import com.pragma.crediya.api.DTOs.UserInfoDTO;
 import com.pragma.crediya.model.user.User;
 
 @Mapper(componentModel = "spring")
@@ -16,4 +17,7 @@ public interface UserMapper {
     
     // @Mapping(target = "fecha_nacimiento", source = "fecha_nacimiento")
     User toModel(UserDTO userDTO);
+    UserInfoDTO toUserInfoDTO(User user);
+
+
 }
