@@ -5,6 +5,8 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import com.nimbusds.jose.JOSEException;
@@ -15,10 +17,13 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 // Este servicio es para firmar mis JWT
 public class JwtService {
 
@@ -42,10 +47,13 @@ public class JwtService {
         }
     }
 
-    public String generateToken(String email, String role) throws InvalidKeyException, JOSEException {
+    public String generateToken(String email, String role, String documentoIdentidad) throws InvalidKeyException, JOSEException {
+        log.info(documentoIdentidad);
         return Jwts.builder()
                 .subject(email)
-                .claim("role", role)
+                .claim("email", email)
+                .claim("doc", documentoIdentidad)
+                .claim("scp", Arrays.asList(role))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(rsaKey.toPrivateKey(), Jwts.SIG.RS256) // 🔑 clave privada

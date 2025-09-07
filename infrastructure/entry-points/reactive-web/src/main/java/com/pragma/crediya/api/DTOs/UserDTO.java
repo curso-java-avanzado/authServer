@@ -27,7 +27,7 @@ public record UserDTO(
     @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
     String password,
 
-    String documento_identidad,
+    String documentoIdentidad,
     LocalDate fecha_nacimiento,
     String direccion,
     String telefono,

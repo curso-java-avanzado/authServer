@@ -3,11 +3,13 @@ package com.pragma.crediya.api.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
 import com.nimbusds.jose.JOSEException;
 import com.pragma.crediya.api.DTOs.AuthRequestDTO;
 import com.pragma.crediya.api.DTOs.AuthResponseDTO;
 import com.pragma.crediya.api.DTOs.UserDTO;
+import com.pragma.crediya.api.DTOs.UserInfoDTO;
 import com.pragma.crediya.api.mapper.UserMapper;
 import com.pragma.crediya.api.security.JwtService;
 import com.pragma.crediya.model.user.User;
@@ -25,16 +27,15 @@ public class AuthService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final TransactionalOperator transactionalOperator;
 
-    @Transactional
     public Mono<AuthResponseDTO> register(UserDTO request) throws IllegalArgumentException{
         User user = User.builder()
-                // La DB GENERA EL ID!!!
                 .nombre(request.nombre())
                 .apellido(request.apellido())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
-                .documento_identidad(request.documento_identidad())
+                .documentoIdentidad(request.documentoIdentidad())
                 .fecha_nacimiento(request.fecha_nacimiento())
                 .direccion(request.direccion())
                 .telefono(request.telefono())
@@ -47,13 +48,14 @@ public class AuthService {
                 .map(userDto -> {
                     String token;
                     try {
-                        token = jwtService.generateToken(userDto.email(), userDto.id_rol());
+                        token = jwtService.generateToken(userDto.email(), userDto.id_rol(), userDto.documentoIdentidad());
                         return AuthResponseDTO.of(token, userDto);
                     } catch (InvalidKeyException | JOSEException e) {
                         e.printStackTrace();
                     }
                     return null;
-                });
+                })
+                .as(transactionalOperator::transactional);
     }
 
     public Mono<AuthResponseDTO> login(AuthRequestDTO request) {
@@ -64,13 +66,21 @@ public class AuthService {
                 .map(userDto -> {
                     String token;
                     try {
-                        token = jwtService.generateToken(userDto.email(), userDto.id_rol());
+                        token = jwtService.generateToken(userDto.email(), userDto.id_rol(), userDto.documentoIdentidad());
                         return AuthResponseDTO.of(token, userDto);
                     } catch (InvalidKeyException | JOSEException e) {
                         e.printStackTrace();
                     }
                     return null;
                 })
+                .as(transactionalOperator::transactional)
                 .switchIfEmpty(Mono.error(new RuntimeException("Invalid credentials")));
+    }
+
+    public Mono<UserInfoDTO> userInfo(String email) {
+        return userUseCase.findByEmail(email)
+        .map(userMapper::toUserInfoDTO)
+                .as(transactionalOperator::transactional)
+                .switchIfEmpty(Mono.error(new RuntimeException("User not found")));
     }
 }
