@@ -1,0 +1,2 @@
+INSERT INTO usuario (nombre, apellido, email, password, documento_identidad, fecha_nacimiento, direccion, telefono, salario_base, id_rol)
+VALUES ('admin', 'admin', 'admin@example.com', '$2a$12$dfKudSqUqu5IRCWVC8FsVujstc7F4daDICKsXWY89.YWOVddz9MNK', '123456789', '1990-01-01', '123 Admin St', '555-1234', 50000, 'ROLE_ADMIN')

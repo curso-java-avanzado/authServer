@@ -10,14 +10,14 @@ spring:
       enabled: true
       path: "/h2"
   r2dbc:
-    url: r2dbc:postgresql://192.168.0.16:5432/crediYa
-    username: admin
-    password: admin
+    url: r2dbc:postgresql://${DB_HOST:192.168.0.16}:5432/crediYa
+    username: ${DB_USER:admin}
+    password: ${DB_PASSWORD:admin}
   flyway:
     enabled: true
-    url: jdbc:postgresql://192.168.0.16:5432/crediYa
-    user: admin
-    password: admin
+    url: jdbc:postgresql://${DB_HOST:192.168.0.16}:5432/crediYa
+    user: ${DB_USER:admin}
+    password: ${DB_PASSWORD:admin}
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
@@ -36,19 +36,19 @@ management:
       probes:
         enabled: true
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: "*"
 
 adapters:
   r2dbc:
-    host: "192.168.0.16"
+    host: ${DB_HOST:192.168.0.16}
     port: 5432
-    database: "crediYa"
-    schema: "public"
-    username: "admin"
-    password: "admin"
+    database: crediYa
+    schema: public
+    username: ${DB_USER:admin}
+    password: ${DB_PASSWORD:admin}
 
 auth:
-  issuer: http://localhost:8080
+  issuer: http://${AUTH_SERVER:localhost}:8080
   audience: crediYa-API
   key:
     id: dGVzdC1zZWNyZXQta2V5LWZvci1jcmVkaVlhLWFwcGxpY2F0aW9u

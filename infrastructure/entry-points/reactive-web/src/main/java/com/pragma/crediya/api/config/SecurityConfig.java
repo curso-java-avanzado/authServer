@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/swagger-resources/**")
                         .permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .build();
@@ -49,7 +50,7 @@ public class SecurityConfig {
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
         return NimbusReactiveJwtDecoder
-                .withJwkSetUri("http://192.168.0.12:8080/.well-known/jwks.json")
+                .withJwkSetUri("http://localhost:8080/.well-known/jwks.json")
                 .build();
     }
 
